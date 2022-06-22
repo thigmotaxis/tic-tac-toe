@@ -1,0 +1,6 @@
+.boardContainer{
+  display: grid;
+  grid-template-columns: repeat(3, 30px);
+  gap: 2px;
+  place-items: center;
+}
