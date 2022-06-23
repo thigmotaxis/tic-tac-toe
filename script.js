@@ -4,13 +4,32 @@ const gameBoard = (() => {
   return {board}
 })();
 
+
+const playerFactory = (name) => {
+  const makePlay = 0;
+  return name
+}
+
+const playerOne = playerFactory("playerOne")
+const playerTwo = playerFactory("playerTwo")
+console.log(playerOne, playerTwo)
+
 // VIEW = UPDATES DISPLAY
+
 const displayController = (() => {
-  const body = document.querySelector("body")
-  const boardContainer = document.createElement("div")
-  boardContainer.classList.add("boardContainer")
-  body.appendChild(boardContainer)
-  const render = () => {
+// STORE ALL SELECTORS HERE
+  const domCache = (() => {
+    const body = document.querySelector("body")
+
+    return {body}
+  })();
+
+// GENERATES HTML ELEMENTS
+
+  const renderBoard = () => {
+    const boardContainer = document.createElement("div")
+    boardContainer.classList.add("boardContainer")
+    domCache.body.appendChild(boardContainer)
     for(let i = 0; (i < 9); i++) {
       let childElement = document.createElement("div")
       childElement.textContent = gameBoard.board[i]
@@ -24,13 +43,15 @@ const displayController = (() => {
       boardContainer.removeChild(boardContainer.firstChild)
     }
   }
-  return {render, clearBoard}
+  return {renderBoard, clearBoard, domCache}
 })();
-displayController.render();
-// const test = prompt("...")
-// if(test === ".") {
-//   displayController.clearBoard()
-//   displayController.render()
-// }
 
 // CONTROLLER - ALLOWS USER TO MAKE CHANGES TO THE MODEL (e.g. event listeners to store user input)
+
+displayController.renderBoard();
+const test = prompt("...")
+if(test === ".") {
+  displayController.clearBoard()
+  gameBoard.board = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  displayController.renderBoard()
+}
