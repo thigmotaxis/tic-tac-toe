@@ -19,8 +19,6 @@
 const board = (() =>{
   const gameBoard = ["", "", "", "", "", "", "", "", ""]
 
-  // const
-
   return {gameBoard}
 })();
 
@@ -28,45 +26,67 @@ const board = (() =>{
 // display object to create html elements
 // display object:
 // should generate html elements
-// should add event listeners to each board element
+
 const game = (() => {
-  const domCache = (() => {
+
+  let turnCounter = 1
+  const renderBoard = () => {
     const body = document.querySelector("body")
     const boardContainer = document.createElement("div")
-
-    return {body, boardContainer}
-  })();
-
-  const renderBoard = () => {
-    domCache.boardContainer.classList.add("boardContainer")
-    domCache.body.appendChild(domCache.boardContainer)
+    boardContainer.classList.add("boardContainer")
+    body.appendChild(boardContainer)
     for(let i = 0; (i < 9); i++) {
       let childElement = document.createElement("div")
       childElement.textContent = board.gameBoard[i]
       childElement.classList.add("boardSquare")
       childElement.setAttribute("id", `square ${i}`)
       childElement.addEventListener("click", () => {
-        putSymbol(i, childElement)
+        if(childElement.textContent === "") {                   // prevents players from placing a symbol on an occupied board space
+          if ((turnCounter % 2) === 1) {                        // adds player symbol to array then updates text content of dom element to reflect array
+            playerOne.putSymbol(i)
+            playerOne.updateBoardDisplay(childElement)
+            turnCounter++
+          }
+          else {
+            playerTwo.putSymbol(i)
+            playerTwo.updateBoardDisplay(childElement)
+            turnCounter++
+          }
+        }
       })
-      domCache.boardContainer.appendChild(childElement)
+      boardContainer.appendChild(childElement)
     }
+    return {body, boardContainer}
   }
 
-  function putSymbol(i, childElement) {
-    board.gameBoard[i] = "X"
-    childElement.textContent = `${board.gameBoard[i]}`
+
+
+  const newGame = () => {       // newGame SHOULD REMOVE BOARD DISPLAY, RESET turnCounter AND CALL renderBoard() TO REITERATE DISPLAY AND RESET LISTENERS
+    if (firstGame.boardContainer) {
+      firstGame.boardContainer.remove()
+    }
+
   }
 
-  const clearBoard = () => {
-    domCache.boardContainer.remove()
+  const firstGame = renderBoard();
+  const test = prompt("test")
+  if (test === ".") newGame();
+
+  // FACTORY FUNCTION CREATING PLAYERS - to do: add input elements allowing players to set player names, defaults "wingus" and "dingus"
+  const playerFactory = (name, symbol) => {
+    const putSymbol = (index) => {
+      board.gameBoard[index] = symbol
+    }
+    const updateBoardDisplay = ((childElement) => {
+      childElement.textContent = symbol
+    })
+    return {name, symbol, putSymbol, updateBoardDisplay}
   }
 
-  renderBoard();
+  const playerOne = playerFactory("one", "X")
+  const playerTwo = playerFactory("two", "O")
 
-  return {renderBoard, clearBoard}
+// END PLAYER CONTROLS
+
+  return {renderBoard, newGame}
 })();
-
-// const test = prompt("clear?")
-// if (test === "") {
-//   game.clearBoard()
-// }
