@@ -1,92 +1,115 @@
-// game object containing methods: newGame(player1, player2), putSymbol(coordinate[0...9])
-// game object:
-// should load a new game (loading in two players, each with X or O assigned and)
-// should include a method for each player to place a symbol on the board
-
-// const gameBoard = (() => {
-//   const board = ["X", "O", "X", "O", "X", "O", "X", "O", "X"]
-//   return {board}
-// })();
-// playerFactory, creating player1 and player2
-
-
-// board object containing methods: putSymbol(boardDivId, coordinateInArray, symbolXorO), clear(boardDivId), render(boardDivId)
-// board object:
-// should contain an array with current symbols on the board
-// a method to update that array
-// a method to update the display
-
-const board = (() =>{
-  const gameBoard = ["", "", "", "", "", "", "", "", ""]
-
-  return {gameBoard}
+// MAKE BOARD DISPLAY
+const renderBoard = (() => {
+  const body = document.querySelector("body")
+  const boardContainer = document.createElement("div")
+  boardContainer.classList.add("boardContainer")
+  body.appendChild(boardContainer)
+  for(let i = 0; (i < 9); i++) {
+    let boardSquare = document.createElement("div")
+    boardSquare.classList.add("boardSquare")
+    boardContainer.appendChild(boardSquare)
+  }
 })();
 
 
-// display object to create html elements
-// display object:
-// should generate html elements
+// MAKE BOARD ARRAY
+const board = ["", "", "", "", "", "", "", "", ""]
+// const board = ["X", "X", "X", "X", "O", 5, "X", "O", 8]
+// TEST BOARD ^^
 
-const game = (() => {
+// MAKE PLAYER OBJECTS
+// FACTORY FUNCTION TO CREATE PLAYERS - to do: add input elements allowing players to set player names, defaults "wingus" and "dingus"
+const playerFactory = (name, symbol) => {
+  return {name, symbol}
+}
 
-  let turnCounter = 1
-  const renderBoard = () => {
-    const body = document.querySelector("body")
-    const boardContainer = document.createElement("div")
-    boardContainer.classList.add("boardContainer")
-    body.appendChild(boardContainer)
-    for(let i = 0; (i < 9); i++) {
-      let childElement = document.createElement("div")
-      childElement.textContent = board.gameBoard[i]
-      childElement.classList.add("boardSquare")
-      childElement.setAttribute("id", `square ${i}`)
-      childElement.addEventListener("click", () => {
-        if(childElement.textContent === "") {                   // prevents players from placing a symbol on an occupied board space
-          if ((turnCounter % 2) === 1) {                        // adds player symbol to array then updates text content of dom element to reflect array
-            playerOne.putSymbol(i)
-            playerOne.updateBoardDisplay(childElement)
-            turnCounter++
-          }
-          else {
-            playerTwo.putSymbol(i)
-            playerTwo.updateBoardDisplay(childElement)
-            turnCounter++
-          }
-        }
-      })
-      boardContainer.appendChild(childElement)
-    }
-    return {body, boardContainer}
+const playerOne = playerFactory("one", "X")
+const playerTwo = playerFactory("two", "O")
+
+// GAMEPLAY LOGIC
+
+let turnCounter = 1
+
+const putSymbol = (index) => {
+
+  if (turnCounter % 2 === 1) {
+    board[index] = playerOne.symbol
   }
-
-
-
-  const newGame = () => {       // newGame SHOULD REMOVE BOARD DISPLAY, RESET turnCounter AND CALL renderBoard() TO REITERATE DISPLAY AND RESET LISTENERS
-    if (firstGame.boardContainer) {
-      firstGame.boardContainer.remove()
-    }
-
+  else {
+    board[index] = playerTwo.symbol
   }
+}
 
-  const firstGame = renderBoard();
-  const test = prompt("test")
-  if (test === ".") newGame();
-
-  // FACTORY FUNCTION CREATING PLAYERS - to do: add input elements allowing players to set player names, defaults "wingus" and "dingus"
-  const playerFactory = (name, symbol) => {
-    const putSymbol = (index) => {
-      board.gameBoard[index] = symbol
-    }
-    const updateBoardDisplay = ((childElement) => {
-      childElement.textContent = symbol
+const boardDivs = document.querySelectorAll(".boardSquare")
+const createEventListeners = (() => {
+  boardDivs.forEach((boardDiv, index) => {
+    boardDiv.addEventListener("click", () => {
+      if (board[index] === "") {
+        putSymbol(index)
+        updateBoard(index)
+        turnCounter++
+      }
     })
-    return {name, symbol, putSymbol, updateBoardDisplay}
-  }
-
-  const playerOne = playerFactory("one", "X")
-  const playerTwo = playerFactory("two", "O")
-
-// END PLAYER CONTROLS
-
-  return {renderBoard, newGame}
+  })
 })();
+
+const updateBoard = (index) => {
+  if (turnCounter % 2 === 1) {
+    boardDivs[index].textContent = playerOne.symbol
+  }
+  else {
+    boardDivs[index].textContent = playerTwo.symbol
+  }
+  if (boardDivs[index].textContent !== "") {
+    checkGameOver()
+  }
+}
+
+// RESET MUST COME AFTER PLAYER FACTORY, CONST BOARD DIVS AND CONST EVENTLISTENERS
+function resetBoard() {
+  for (element in board) {
+    board[element] = ""
+  }
+  for (div in Array.from(boardDivs)) {
+    boardDivs[div].textContent = ""
+  }
+  turnCounter = 1
+}
+const resetButton = document.querySelector(".test")
+resetButton.addEventListener("click", () => {
+  resetBoard()
+  }
+)
+function checkGameOver() {
+// CHECKS FOR COLUMN WINS
+  const columns = [0, 1, 2]
+  for (let i = 0; i < 3; i++) {
+    if (board[i] !== "" && board[i] === board[i + 3] && board[i] === board[i + 6]) {
+      console.log("game over")
+    }
+  }
+// CHECKS FOR ROW WINS
+  const rows = [0, 3, 6]
+  for (let i = 0; i < 9; i += 3) {
+    if (board[i] !== "" && board[i] === board[i + 1] && board[i] === board[i + 2]) {
+      console.log("game over")
+    }
+  }
+// CHECKS FOR DIAGONAL WINS
+  const p1Wins = (currentValue) => currentValue === "X"
+  const p2Wins = (currentValue) => currentValue === "O"
+  const downDiagonal = [board[0], board[4], board[8]]
+    if (downDiagonal.every(p1Wins)) {
+      console.log("p1 wins")
+    }
+    if (downDiagonal.every(p2Wins)) {
+      console.log("p2 wins")
+    }
+  const upDiagonal = [board[2], board[4], board[6]]
+  if (upDiagonal.every(p1Wins)) {
+    console.log("p1 wins")
+  }
+  if (upDiagonal.every(p2Wins)) {
+    console.log("p2 wins")
+  }
+}
