@@ -10,42 +10,83 @@ const display = (() => {
   }
 
 // RENDER HEADER
+  const renderHeader = (() => {
+    const header = document.querySelector(".header")
+
+    const title = document.createElement("div")
+    title.classList.add("title")
+    title.textContent = "Tic-Tac-Toe"
+    header.appendChild(title)
+  })();
 
 // RENDER CONTENT
-  const content = document.querySelector(".content")
-  const boardContainer = document.createElement("div")
-  boardContainer.classList.add("boardContainer")
-  content.appendChild(boardContainer)
-  for(let i = 0; (i < 9); i++) {
-    let boardSquare = document.createElement("div")
-    boardSquare.classList.add("boardSquare")
-    boardSquare.setAttribute("data-index", i)
-    boardContainer.appendChild(boardSquare)
-  }
+  const renderContent = (() => {
+    const content = document.querySelector(".content")
+    const boardContainer = document.createElement("div")
+    boardContainer.classList.add("boardContainer")
+    content.appendChild(boardContainer)
+    for(let i = 0; (i < 9); i++) {
+      let boardSquare = document.createElement("div")
+      boardSquare.classList.add("boardSquare")
+      boardSquare.setAttribute("data-index", i)
+      boardContainer.appendChild(boardSquare)
+    }
 
-  const pNameContainer = document.createElement("div")
-  pNameContainer.classList.add("playerNameContainer")
-  content.appendChild(pNameContainer)
-  const inputs = ["One", "Two"]
-  const placeholders = ["Wingus", "Dingus"]
-  for (let i = 0; i < inputs.length; i++) {
-    const label = document.createElement("label")
-    label.setAttribute("for", `player${inputs[i]}`)
-    label.textContent = `Player ${inputs[i]}: `
-    pNameContainer.appendChild(label)
-    const input = document.createElement("input")
-    input.setAttribute("id", `player${inputs[i]}`)
-    input.setAttribute("placeholder", placeholders[i])
-    input.classList.add("playerName")
-    pNameContainer.appendChild(input)
-  }
+    const pNameContainer = document.createElement("div")
+    pNameContainer.classList.add("playerNameContainer")
+    content.appendChild(pNameContainer)
+    const inputs = ["One", "Two"]
+    const placeholders = ["Wingus", "Dingus"]
+    for (let i = 0; i < inputs.length; i++) {
+      const label = document.createElement("label")
+      label.setAttribute("for", `player${inputs[i]}`)
+      label.textContent = `Player ${inputs[i]}: `
+      pNameContainer.appendChild(label)
+      const input = document.createElement("input")
+      input.setAttribute("id", `player${inputs[i]}`)
+      input.setAttribute("placeholder", placeholders[i])
+      input.classList.add("playerName")
+      pNameContainer.appendChild(input)
+    }
 
-  const resetButton = document.createElement("button")
-  resetButton.classList.add("reset")
-  resetButton.textContent = "New Game"
-  content.appendChild(resetButton)
+    const resetButton = document.createElement("button")
+    resetButton.classList.add("reset")
+    resetButton.textContent = "New Game"
+    content.appendChild(resetButton)
+  })();
 
+// RENDER FOOTER
+  const renderFooter = (() => {
+    const footer = document.querySelector(".footer")
+
+    const gitStuff = document.createElement("div")
+    gitStuff.classList.add("gitStuff")
+    footer.appendChild(gitStuff)
+
+    const gitLogo = document.createElement("img")
+    gitLogo.setAttribute("src", "images/gitLogo.png")
+    gitLogo.classList.add("footerImg")
+    gitStuff.appendChild(gitLogo)
+    const gitLink = document.createElement("a")
+    gitLink.setAttribute("href", "https://github.com/thigmotaxis/tic-tac-toe")
+    gitLink.textContent = "source"
+    gitStuff.appendChild(gitLink)
+
+    const copyright = document.createElement("div")
+    copyright.classList.add("copyright")
+    footer.appendChild(copyright)
+
+    const symbol = document.createElement("img")
+    symbol.setAttribute("src", "images/copyright.jpg")
+    symbol.classList.add("footerImg")
+    copyright.appendChild(symbol)
+
+    const attribution = document.createElement("div")
+    attribution.textContent = "Copyright Abe Industries 2022"
+    copyright.appendChild(attribution)
+  })();
 })();
+
 
 const players = (() => {
   const playerFactory = (name, symbol) => {
