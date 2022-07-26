@@ -63,7 +63,6 @@ const game = (() => {
         boardDiv.addEventListener("click", handleClick, {once: true})
       })
     })
-    addListeners()
 
     const removeListeners = () => {
       boardDivs.forEach((boardDiv, index) => {
