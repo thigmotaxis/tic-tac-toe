@@ -35,8 +35,15 @@ const updateBoard = (e) => (turnCounter % 2 === 1) ? e.target.textContent = play
 const handleClick = (e) => {
   updateBoard(e)
   putSymbol(e)
-  checkGameOver()
+  const outcome = checkGameOver()
   turnCounter++
+  if (outcome !== undefined) {
+    removeListeners()
+    if (outcome === "none") {
+      alert("Oh, a tie. How boring...")
+    }
+    else alert(`Player ${outcome} is the glorious winner`)
+  }
 }
 
 
@@ -64,27 +71,28 @@ function resetBoard() {
 const resetButton = document.querySelector(".reset")
 resetButton.addEventListener("click", resetBoard)
 
-const test = document.querySelector(".test")
-test.addEventListener("click", () => {
+
+const removeListeners = () => {
   boardDivs.forEach((boardDiv, index) => {
     boardDiv.removeEventListener("click", handleClick)
   })
-})
+}
 
 
 function checkGameOver() {
+  let winner = "none"
 // CHECKS FOR COLUMN WINS
   const columns = [0, 1, 2]
   for (let i = 0; i < 3; i++) {
     if (board[i] !== "" && board[i] === board[i + 3] && board[i] === board[i + 6]) {
-      board[i] === "X" ? alert("Player 1 wins!") : alert("Player 2 wins!")
+      board[i] === "X" ? winner = "one" : winner = "two"
     }
   }
 // CHECKS FOR ROW WINS
   const rows = [0, 3, 6]
   for (let i = 0; i < 9; i += 3) {
     if (board[i] !== "" && board[i] === board[i + 1] && board[i] === board[i + 2]) {
-      board[i] === "X" ? alert("Player 1 wins!") : alert("Player 2 wins!")
+      board[i] === "X" ? winner = "one" : winner = "two"
     }
   }
 // CHECKS FOR DIAGONAL WINS
@@ -92,22 +100,25 @@ function checkGameOver() {
   const p2Wins = (currentValue) => currentValue === "O"
   const downDiagonal = [board[0], board[4], board[8]]
     if (downDiagonal.every(p1Wins)) {
-      alert("Player 1 wins!")
+      winner = "one"
     }
     if (downDiagonal.every(p2Wins)) {
-      alert("Player 2 wins!")
+      winner = "two"
     }
   const upDiagonal = [board[2], board[4], board[6]]
   if (upDiagonal.every(p1Wins)) {
-    alert("Player 1 wins!")
+    winner = "one"
   }
   if (upDiagonal.every(p2Wins)) {
-    alert("Player 2 wins!")
+    winner = "two"
   }
+if (winner !== "none" || turnCounter > 8) {
+  return winner
+}
+
 }
 // TO DO NEXT:
 
-// function that removes event listeners and declare a winner if a win condition is met (checkGameOver should return a "winner" or "outcome" variable)
-// add logic that checks for a tie (e.g. if turnCounter === 9, declareTie()?)
+
 // clean up win condition logic so that it sucks less
 // reorg code into modules/objects
