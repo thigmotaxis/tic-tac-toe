@@ -1,5 +1,5 @@
 const display = (() => {
-  // MAKE BOARD DISPLAY
+// MAKE BOARD DISPLAY
   const renderBoard = (() => {
     const body = document.querySelector("body")
     const boardContainer = document.createElement("div")
@@ -16,25 +16,28 @@ const display = (() => {
 
 
 const game = (() => {
-  // MAKE BOARD ARRAY
+// MAKE BOARD ARRAY
   const board = ["", "", "", "", "", "", "", "", ""]
 
-  // MAKE PLAYER OBJECTS
-  // FACTORY FUNCTION TO CREATE PLAYERS - to do: add input elements allowing players to set player names, defaults "wingus" and "dingus"
-  const playerFactory = (name, symbol) => {
-    const score = 0
-    return {name, symbol, score}
-  }
+// MAKE PLAYER OBJECTS
+// FACTORY FUNCTION TO CREATE PLAYERS - to do: add input elements allowing players to set player names, defaults "wingus" and "dingus"
+  const players = (() => {
+    const playerFactory = (name, symbol) => {
+      const score = 0
+      return {name, symbol, score}
+    }
 
-  const playerOne = playerFactory("one", "X")
-  const playerTwo = playerFactory("two", "O")
+    const one = playerFactory("wingus", "X")
+    const two = playerFactory("dingus", "O")
+    return {one, two}
+  })();
 
-  // GAMEPLAY LOGIC
+// GAMEPLAY LOGIC
 
   let turnCounter = 1
 
-  const putSymbol = (e) => (turnCounter % 2 === 1) ? board[e.target.dataset.index] = playerOne.symbol : board[e.target.dataset.index] = playerTwo.symbol
-  const updateBoard = (e) => (turnCounter % 2 === 1) ? e.target.textContent = playerOne.symbol : e.target.textContent = playerTwo.symbol
+  const putSymbol = (e) => (turnCounter % 2 === 1) ? board[e.target.dataset.index] = players.one.symbol : board[e.target.dataset.index] = players.two.symbol
+  const updateBoard = (e) => (turnCounter % 2 === 1) ? e.target.textContent = players.one.symbol : e.target.textContent = players.two.symbol
 
   const gameBoard = (() => {
 
@@ -48,7 +51,7 @@ const game = (() => {
         if (outcome === "none") {
           alert("Oh, a tie. How boring...")
         }
-        else alert(`Player ${outcome} is the glorious winner`)
+        else alert(`${outcome} is the glorious winner`)
       }
 
     }
@@ -89,45 +92,43 @@ const game = (() => {
 
   const checkGameOver = () => {
     let winner = "none"
-    // CHECKS FOR COLUMN WINS
+// CHECKS FOR COLUMN WINS
     const columns = [0, 1, 2]
     for (let i = 0; i < 3; i++) {
       if (board[i] !== "" && board[i] === board[i + 3] && board[i] === board[i + 6]) {
-        board[i] === "X" ? winner = "one" : winner = "two"
+        board[i] === "X" ? winner = players.one.name : winner = players.two.name
       }
     }
-    // CHECKS FOR ROW WINS
+// CHECKS FOR ROW WINS
     const rows = [0, 3, 6]
     for (let i = 0; i < 9; i += 3) {
       if (board[i] !== "" && board[i] === board[i + 1] && board[i] === board[i + 2]) {
-        board[i] === "X" ? winner = "one" : winner = "two"
+        board[i] === "X" ? winner = players.one.name : winner = players.two.name
       }
     }
-    // CHECKS FOR DIAGONAL WINS
+// CHECKS FOR DIAGONAL WINS
     const p1Wins = (currentValue) => currentValue === "X"
     const p2Wins = (currentValue) => currentValue === "O"
     const downDiagonal = [board[0], board[4], board[8]]
     if (downDiagonal.every(p1Wins)) {
-      winner = "one"
+      winner = players.one.name
     }
     if (downDiagonal.every(p2Wins)) {
-      winner = "two"
+      winner = players.two.name
     }
     const upDiagonal = [board[2], board[4], board[6]]
     if (upDiagonal.every(p1Wins)) {
-      winner = "one"
+      winner = players.one.name
     }
     if (upDiagonal.every(p2Wins)) {
-      winner = "two"
+      winner = players.two.name
     }
     if (winner !== "none" || turnCounter > 8) {
       return winner
     }
-
   }
-
 })();
 
 // TO DO NEXT:
 // clean up win condition logic so that it sucks less
-// reorg code into modules/objects
+// improve user interface so user can add player names
