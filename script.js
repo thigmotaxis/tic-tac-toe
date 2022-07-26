@@ -1,8 +1,15 @@
 const display = (() => {
 // MAKE BOARD DISPLAY
+  const body = document.querySelector("body")
+
+// TO DO: ADD IIFE TO RENDER REST OF USER INTERFACE (INCLUDING INPUT FIELDS)
+  // const renderPage = (() => {
+  //   const inputContainer = document.createElement("div")
+  //   body.appendChild(inputContainer)
+  //   const playerOneInput =
+  // })();
 
   const renderBoard = (() => {
-    const body = document.querySelector("body")
     const boardContainer = document.createElement("div")
     boardContainer.classList.add("boardContainer")
     body.appendChild(boardContainer)
@@ -15,86 +22,27 @@ const display = (() => {
   })();
 })();
 
+// MAKE PLAYER OBJECTS
+// FACTORY FUNCTION TO CREATE PLAYERS
+const players = (() => {
+  const playerFactory = (name, symbol) => {
+    const score = 0
+    return {name, symbol, score}
+  }
 
-const game = (() => {
+  const one = playerFactory("", "X")
+  const two = playerFactory("", "O")
+  return {one, two}
+})();
+
+// START GAMEBOARD OBJECT
+const gameBoard = (() => {
+
 // MAKE BOARD ARRAY
   const board = ["", "", "", "", "", "", "", "", ""]
 
-// MAKE PLAYER OBJECTS
-// FACTORY FUNCTION TO CREATE PLAYERS
-  const players = (() => {
-    const playerFactory = (name, symbol) => {
-      const score = 0
-      return {name, symbol, score}
-    }
-
-    const one = playerFactory("Wingus", "X")
-    const two = playerFactory("Dingus", "O")
-    return {one, two}
-  })();
-
-// GAMEPLAY LOGIC
-
-  let turnCounter = 1
-
-  const putSymbol = (e) => (turnCounter % 2 === 1) ? board[e.target.dataset.index] = players.one.symbol : board[e.target.dataset.index] = players.two.symbol
-  const updateBoard = (e) => (turnCounter % 2 === 1) ? e.target.textContent = players.one.symbol : e.target.textContent = players.two.symbol
-
-  const gameBoard = (() => {
-
-    const handleClick = (e) => {
-      updateBoard(e)
-      putSymbol(e)
-      const outcome = checkGameOver()
-      turnCounter++
-      if (outcome !== undefined) {
-        removeListeners()
-        if (outcome === "none") {
-          alert("Oh, a tie. How boring...")
-        }
-        else alert(`${outcome} is the glorious winner`)
-      }
-
-    }
-//
-    const boardDivs = document.querySelectorAll(".boardSquare")
-    const addListeners = (() => {
-      boardDivs.forEach((boardDiv, index) => {
-        boardDiv.addEventListener("click", handleClick, {once: true})
-      })
-    })
-
-    const removeListeners = () => {
-      boardDivs.forEach((boardDiv, index) => {
-        boardDiv.removeEventListener("click", handleClick)
-      })
-    }
-    return {boardDivs, addListeners}
-  })();
-
-
-
-  const newGame = () => {
-    players.one.name = document.getElementById("playerOne").value
-    players.two.name = document.getElementById("playerTwo").value
-    if (players.one.name === "" || players.two.name === "") {
-      alert("Please enter a name for each player")
-      return
-    }
-    for (element in board) {
-      board[element] = ""
-    }
-    for (div in Array.from(gameBoard.boardDivs)) {
-      gameBoard.boardDivs[div].textContent = ""
-    }
-    gameBoard.addListeners()
-    turnCounter = 1
-  }
-  const resetButton = document.querySelector(".reset")
-  resetButton.addEventListener("click", newGame)
-
-
-
+  const putSymbol = (e) => (game.turnCounter % 2 === 1) ? board[e.target.dataset.index] = players.one.symbol : board[e.target.dataset.index] = players.two.symbol
+  const updateBoard = (e) => (game.turnCounter % 2 === 1) ? e.target.textContent = players.one.symbol : e.target.textContent = players.two.symbol
 
   const checkGameOver = () => {
     let winner = "none"
@@ -129,10 +77,67 @@ const game = (() => {
     if (upDiagonal.every(p2Wins)) {
       winner = players.two.name
     }
-    if (winner !== "none" || turnCounter > 8) {
+    if (winner !== "none" || game.turnCounter > 8) {
       return winner
     }
   }
+
+  const handleClick = (e) => {
+    updateBoard(e)
+    putSymbol(e)
+    const outcome = checkGameOver()
+    game.turnCounter++
+    if (outcome !== undefined) {
+      removeListeners()
+      if (outcome === "none") {
+        alert("Oh, a tie. How boring...")
+      }
+      else alert(`${outcome} is the glorious winner`)
+    }
+  }
+//
+  const boardDivs = document.querySelectorAll(".boardSquare")
+  const addListeners = (() => {
+    boardDivs.forEach((boardDiv, index) => {
+      boardDiv.addEventListener("click", handleClick, {once: true})
+    })
+  })
+
+  const removeListeners = () => {
+    boardDivs.forEach((boardDiv, index) => {
+      boardDiv.removeEventListener("click", handleClick)
+    })
+  }
+  return {board, boardDivs, addListeners}
+})();
+
+// END GAMEBOARD OBJECT
+
+const game = (() => {
+
+  let turnCounter = 1
+
+  const newGame = () => {
+    players.one.name = document.getElementById("playerOne").value
+    players.two.name = document.getElementById("playerTwo").value
+    if (players.one.name === "" || players.two.name === "") {
+      alert("Please enter a name for each player")
+      return
+    }
+    for (element in gameBoard.board) {
+      gameBoard.board[element] = ""
+    }
+    for (div in Array.from(gameBoard.boardDivs)) {
+      gameBoard.boardDivs[div].textContent = ""
+    }
+    gameBoard.addListeners()
+    turnCounter = 1
+  }
+
+  const resetButton = document.querySelector(".reset")
+  resetButton.addEventListener("click", newGame)
+
+  return {turnCounter}
 })();
 
 // TO DO NEXT:
