@@ -22,8 +22,6 @@ const display = (() => {
   })();
 })();
 
-// MAKE PLAYER OBJECTS
-// FACTORY FUNCTION TO CREATE PLAYERS
 const players = (() => {
   const playerFactory = (name, symbol) => {
     const score = 0
@@ -41,10 +39,10 @@ const gameBoard = (() => {
 // MAKE BOARD ARRAY
   const board = ["", "", "", "", "", "", "", "", ""]
 
-  const putSymbol = (e) => (game.turnCounter % 2 === 1) ? board[e.target.dataset.index] = players.one.symbol : board[e.target.dataset.index] = players.two.symbol
-  const updateBoard = (e) => (game.turnCounter % 2 === 1) ? e.target.textContent = players.one.symbol : e.target.textContent = players.two.symbol
+  const updateBoard = (e, player) => e.target.textContent = player.symbol
+  const putSymbol = (e, player) => board[e.target.dataset.index] = player.symbol
 
-  const checkGameOver = () => {
+  const checkGameOver = (turn) => {
     let winner = "none"
 // CHECKS FOR COLUMN WINS
     const columns = [0, 1, 2]
@@ -77,16 +75,16 @@ const gameBoard = (() => {
     if (upDiagonal.every(p2Wins)) {
       winner = players.two.name
     }
-    if (winner !== "none" || game.turnCounter > 8) {
+    if (winner !== "none" || turn > 8) {
       return winner
     }
   }
 
   const handleClick = (e) => {
-    updateBoard(e)
-    putSymbol(e)
-    const outcome = checkGameOver()
-    game.turnCounter++
+    const [turn, player] = game.checkTurn()
+    updateBoard(e, player)
+    putSymbol(e, player)
+    const outcome = checkGameOver(turn)
     if (outcome !== undefined) {
       removeListeners()
       if (outcome === "none") {
@@ -115,7 +113,14 @@ const gameBoard = (() => {
 
 const game = (() => {
 
-  let turnCounter = 1
+  let turnCounter = 0
+
+  const checkTurn = () => {
+    let currentPlayer
+    (turnCounter % 2 === 0) ? currentPlayer = players.one : currentPlayer = players.two
+    turnCounter++
+    return [turnCounter, currentPlayer]
+  }
 
   const newGame = () => {
     players.one.name = document.getElementById("playerOne").value
@@ -131,13 +136,13 @@ const game = (() => {
       gameBoard.boardDivs[div].textContent = ""
     }
     gameBoard.addListeners()
-    turnCounter = 1
+    turnCounter = 0
   }
 
   const resetButton = document.querySelector(".reset")
   resetButton.addEventListener("click", newGame)
 
-  return {turnCounter}
+  return {checkTurn}
 })();
 
 // TO DO NEXT:
