@@ -2,24 +2,49 @@ const display = (() => {
 // MAKE BOARD DISPLAY
   const body = document.querySelector("body")
 
-// TO DO: ADD IIFE TO RENDER REST OF USER INTERFACE (INCLUDING INPUT FIELDS)
-  // const renderPage = (() => {
-  //   const inputContainer = document.createElement("div")
-  //   body.appendChild(inputContainer)
-  //   const playerOneInput =
-  // })();
+  const sections = ["header", "content", "footer"]
+  for (let i = 0; i < sections.length; i++) {
+    const section = document.createElement("div")
+    section.classList.add(sections[i])
+    body.appendChild(section)
+  }
 
-  const renderBoard = (() => {
-    const boardContainer = document.createElement("div")
-    boardContainer.classList.add("boardContainer")
-    body.appendChild(boardContainer)
-    for(let i = 0; (i < 9); i++) {
-      let boardSquare = document.createElement("div")
-      boardSquare.classList.add("boardSquare")
-      boardSquare.setAttribute("data-index", i)
-      boardContainer.appendChild(boardSquare)
-    }
-  })();
+// RENDER HEADER
+
+// RENDER CONTENT
+  const content = document.querySelector(".content")
+  const boardContainer = document.createElement("div")
+  boardContainer.classList.add("boardContainer")
+  content.appendChild(boardContainer)
+  for(let i = 0; (i < 9); i++) {
+    let boardSquare = document.createElement("div")
+    boardSquare.classList.add("boardSquare")
+    boardSquare.setAttribute("data-index", i)
+    boardContainer.appendChild(boardSquare)
+  }
+
+  const pNameContainer = document.createElement("div")
+  pNameContainer.classList.add("playerNameContainer")
+  content.appendChild(pNameContainer)
+  const inputs = ["One", "Two"]
+  const placeholders = ["Wingus", "Dingus"]
+  for (let i = 0; i < inputs.length; i++) {
+    const label = document.createElement("label")
+    label.setAttribute("for", `player${inputs[i]}`)
+    label.textContent = `Player ${inputs[i]}: `
+    pNameContainer.appendChild(label)
+    const input = document.createElement("input")
+    input.setAttribute("id", `player${inputs[i]}`)
+    input.setAttribute("placeholder", placeholders[i])
+    input.classList.add("playerName")
+    pNameContainer.appendChild(input)
+  }
+
+  const resetButton = document.createElement("button")
+  resetButton.classList.add("reset")
+  resetButton.textContent = "New Game"
+  content.appendChild(resetButton)
+
 })();
 
 const players = (() => {
@@ -108,9 +133,9 @@ const gameBoard = (() => {
   }
   return {board, boardDivs, addListeners}
 })();
-
 // END GAMEBOARD OBJECT
 
+// START GAME OBJECT
 const game = (() => {
 
   let turnCounter = 0
@@ -144,7 +169,7 @@ const game = (() => {
 
   return {checkTurn}
 })();
+// END GAME OBJECT
 
 // TO DO NEXT:
 // clean up win condition logic so that it sucks less
-// improve user interface so user can add player names
