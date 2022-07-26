@@ -1,5 +1,6 @@
 const display = (() => {
 // MAKE BOARD DISPLAY
+
   const renderBoard = (() => {
     const body = document.querySelector("body")
     const boardContainer = document.createElement("div")
@@ -20,15 +21,15 @@ const game = (() => {
   const board = ["", "", "", "", "", "", "", "", ""]
 
 // MAKE PLAYER OBJECTS
-// FACTORY FUNCTION TO CREATE PLAYERS - to do: add input elements allowing players to set player names, defaults "wingus" and "dingus"
+// FACTORY FUNCTION TO CREATE PLAYERS
   const players = (() => {
     const playerFactory = (name, symbol) => {
       const score = 0
       return {name, symbol, score}
     }
 
-    const one = playerFactory("wingus", "X")
-    const two = playerFactory("dingus", "O")
+    const one = playerFactory("Wingus", "X")
+    const two = playerFactory("Dingus", "O")
     return {one, two}
   })();
 
@@ -56,25 +57,31 @@ const game = (() => {
 
     }
 //
-      const boardDivs = document.querySelectorAll(".boardSquare")
-      const addListeners = (() => {
-        boardDivs.forEach((boardDiv, index) => {
-          boardDiv.addEventListener("click", handleClick, {once: true})
-        })
+    const boardDivs = document.querySelectorAll(".boardSquare")
+    const addListeners = (() => {
+      boardDivs.forEach((boardDiv, index) => {
+        boardDiv.addEventListener("click", handleClick, {once: true})
       })
-      addListeners()
+    })
+    addListeners()
 
-      const removeListeners = () => {
-        boardDivs.forEach((boardDiv, index) => {
-          boardDiv.removeEventListener("click", handleClick)
-        })
-      }
+    const removeListeners = () => {
+      boardDivs.forEach((boardDiv, index) => {
+        boardDiv.removeEventListener("click", handleClick)
+      })
+    }
     return {boardDivs, addListeners}
   })();
 
 
 
   const newGame = () => {
+    players.one.name = document.getElementById("playerOne").value
+    players.two.name = document.getElementById("playerTwo").value
+    if (players.one.name === "" || players.two.name === "") {
+      alert("Please enter a name for each player")
+      return
+    }
     for (element in board) {
       board[element] = ""
     }
