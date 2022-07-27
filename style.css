@@ -1,3 +1,64 @@
+/* START MEYER RESET */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* END MEYER RESET */
+
+body {
+  display: grid;
+  grid-template-rows: 10vh 80vh 10vh;
+}
+
+/* START HEADER STYLES */
+.header {
+  display: grid;
+  place-items: center;
+  border-bottom: solid black 1px;
+  font-size: 3rem;
+}
+/* END HEADER STYLES */
+
+/* BEGIN CONTENT STYLES */
 .boardContainer{
   display: grid;
   grid-template-columns: repeat(3, 30px);
@@ -12,3 +73,30 @@
   width: 20px;
   height: 20px;
 }
+/* END CONTENT STYLES */
+
+/* START FOOTER STYLES */
+.footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  padding: 1rem;
+}
+
+.gitStuff {
+  display: grid;
+  grid-template-columns: 32px 50px;
+  grid-gap: 5px;
+  justify-self: start;
+}
+
+.copyright {
+  display: grid;
+  grid-template-columns: 50px 300px;
+  justify-self: end;
+}
+
+.footerImg {
+  height: 2rem;
+}
+/* END FOOTER STYLES */
