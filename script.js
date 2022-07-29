@@ -32,21 +32,25 @@ const display = (() => {
       boardContainer.appendChild(boardSquare)
     }
 
-    const pNameContainer = document.createElement("div")
-    pNameContainer.classList.add("playerNameContainer")
-    content.appendChild(pNameContainer)
-    const inputs = ["One", "Two"]
+    const playerOne = document.createElement("div")
+    playerOne.classList.add("playerOne")
+    content.appendChild(playerOne)
+    const playerTwo = document.createElement("div")
+    playerTwo.classList.add("playerTwo")
+    content.appendChild(playerTwo)
+
+    const players = [playerOne, playerTwo]
     const placeholders = ["Wingus", "Dingus"]
-    for (let i = 0; i < inputs.length; i++) {
+    for (let i = 0; i < players.length; i++) {
       const label = document.createElement("label")
-      label.setAttribute("for", `player${inputs[i]}`)
-      label.textContent = `Player ${inputs[i]}: `
-      pNameContainer.appendChild(label)
+      label.setAttribute("for", `player${i+1}`)
+      label.textContent = `Player ${i+1}: `
+      players[i].appendChild(label)
       const input = document.createElement("input")
-      input.setAttribute("id", `player${inputs[i]}`)
+      input.setAttribute("id", `player${i+1}`)
       input.setAttribute("placeholder", placeholders[i])
-      input.classList.add("playerName")
-      pNameContainer.appendChild(input)
+      input.classList.add("nameInput")
+      players[i].appendChild(input)
     }
 
     const resetButton = document.createElement("button")
@@ -189,8 +193,8 @@ const game = (() => {
   }
 
   const newGame = () => {
-    players.one.name = document.getElementById("playerOne").value
-    players.two.name = document.getElementById("playerTwo").value
+    players.one.name = document.getElementById("player1").value
+    players.two.name = document.getElementById("player2").value
     if (players.one.name === "" || players.two.name === "") {
       alert("Please enter a name for each player")
       return

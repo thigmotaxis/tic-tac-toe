@@ -47,10 +47,15 @@ table {
 body {
   display: grid;
   grid-template-rows: 10vh 80vh 10vh;
+  grid-template-areas:
+    "header"
+    "content"
+    "footer";
 }
 
 /* START HEADER STYLES */
 .header {
+  grid-area: header;
   display: grid;
   place-items: center;
   border-bottom: solid black 1px;
@@ -59,24 +64,58 @@ body {
 /* END HEADER STYLES */
 
 /* BEGIN CONTENT STYLES */
-.boardContainer{
+.content {
+  grid-area: content;
   display: grid;
-  grid-template-columns: repeat(3, 30px);
-  gap: 2px;
+  grid-template-columns: 2fr 2fr 1fr 2fr 2fr;
+  grid-template-rows: 4fr 1fr 1fr;
+  grid-template-areas:
+    ". board board board ."
+    ". playerOne . playerTwo ."
+    ". . button . .";
+}
+
+.boardContainer {
+  grid-area: board;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows:
+  gap: 5px;
+  height: 100%;
+  width: 100%;
+  place-self: center;
   place-items: center;
 }
 
-.boardSquare{
+.boardSquare {
   margin: 2px;
-  text-align: center;
-  border: solid red 1px;
-  width: 20px;
-  height: 20px;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  border: solid black 1px;
+  width: 98%;
+  height: 98%;
+}
+
+.playerOne {
+  grid-area: playerOne;
+}
+
+.playerTwo {
+  grid-area: playerTwo;
+}
+
+.reset {
+  grid-area: button;
+  width: 100px;
+  height: 50px;
 }
 /* END CONTENT STYLES */
 
 /* START FOOTER STYLES */
 .footer {
+  grid-area: footer;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: end;
